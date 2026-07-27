@@ -1,0 +1,172 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXHKaijARwuQdOi",
+          "mode": "list",
+          "cachedResultName": "Asistente comercial YPF",
+          "cachedResultUrl": "https://airtable.com/appXHKaijARwuQdOi"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblP5AjfiCryvKvaW",
+          "mode": "list",
+          "cachedResultName": "Productos",
+          "cachedResultUrl": "https://airtable.com/appXHKaijARwuQdOi/tblP5AjfiCryvKvaW"
+        },
+        "filterByFormula": "={Código}=\"{{$json.chatInput}}\"",
+        "returnAll": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "45687e81-eff0-4fba-8c26-30377b4558b5",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "sx14iW77xM9wPLE3",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "4356cd83-7f9a-41e4-a199-2f818718cde2",
+      "name": "When chat message received",
+      "webhookId": "6788fd69-4765-4ac9-a331-1b5e3a8d7305"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Hola.\n\nRedacta un mensaje comercial para WhatsApp diciendo que el producto ELAION AURO FE 530 12/1 tiene un precio de $26.641,48.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        624,
+        0
+      ],
+      "id": "1581c1a1-160a-4b03-878d-2bc0d905d046",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        96,
+        272
+      ],
+      "id": "85f71391-8d42-42e2-b015-3538b7491def",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "IoDNe4yNyz0D9k7O",
+          "name": "Groq account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "fran310.p@gmail.com",
+        "subject": "Prueba TP Automatización IA",
+        "message": "La automatización se ejecutó correctamente.  Esta es una prueba del Trabajo Práctico.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        240
+      ],
+      "id": "720aed15-1efb-46dc-958b-6e4f01003bda",
+      "name": "Send a message",
+      "webhookId": "d11ffcdc-cd54-4ad3-bd43-caf2cdce5cde"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        768,
+        240
+      ],
+      "id": "a2383cdd-b814-41a2-ae53-6e7ad527ed4a",
+      "name": "Error Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        []
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f70f5db9-6509-4414-8ecb-065aa8f15c85",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "807ad13c3bf51efff215bd34f3810862e4db59d4fca1945f8ef8d51a11a4a8a8"
+  },
+  "nodeGroups": [],
+  "id": "7mSDeU3DgKgXazfc",
+  "tags": []
+}
