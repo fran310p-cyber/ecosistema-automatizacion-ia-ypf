@@ -25,7 +25,7 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        208,
+        416,
         0
       ],
       "id": "45687e81-eff0-4fba-8c26-30377b4558b5",
@@ -44,7 +44,7 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        416,
+        -192,
         0
       ],
       "id": "4356cd83-7f9a-41e4-a199-2f818718cde2",
@@ -54,7 +54,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Hola.\n\nRedacta un mensaje comercial para WhatsApp diciendo que el producto ELAION AURO FE 530 12/1 tiene un precio de $26.641,48.",
+        "text": "=Redacta un mensaje comercial para WhatsApp informando que el producto {{$json.Producto}} tiene un precio de ${{$json.Precio}}.\nEl mensaje debe ser breve, cordial y orientado a ventas.",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -108,11 +108,81 @@
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [
-        768,
+        784,
         240
       ],
       "id": "a2383cdd-b814-41a2-ae53-6e7ad527ed4a",
       "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Aprobación de respuesta comercial",
+        "formDescription": "Revise la respuesta generada por la IA.\n\nSi la información es correcta, apruebe la continuación del flujo.\n\nSi detecta algún error, rechace la operación.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Aprobacion",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Aprobar"
+                  },
+                  {
+                    "option": "Rechazar"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1072,
+        16
+      ],
+      "id": "2b434329-b682-4c5a-9fde-1d2e8f2de4be",
+      "name": "Wait1",
+      "webhookId": "a29d3ffe-a846-40f9-809b-6753c98717a0"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4edec75d-002f-41ff-851d-df690a5fbee9",
+              "name": "estado",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "9c1e8361-32da-498a-8043-ffdfa7d20ef9",
+              "name": "Origen",
+              "value": "groq",
+              "type": "string"
+            },
+            {
+              "id": "4e1a75f1-d1f0-4ec0-8441-b8ee3503df21",
+              "name": "mensaje",
+              "value": "Error durante el procesamiento de la consulta",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        976,
+        240
+      ],
+      "id": "937a19e5-4695-4c44-a04a-d5c3d044e2fd",
+      "name": "Edit Fields"
     }
   ],
   "pinData": {},
@@ -132,7 +202,7 @@
       "main": [
         [
           {
-            "node": "Basic LLM Chain",
+            "node": "Search records",
             "type": "main",
             "index": 0
           }
@@ -141,10 +211,38 @@
     },
     "Search records": {
       "main": [
-        []
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
       "main": [
         [
           {
@@ -161,7 +259,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "f70f5db9-6509-4414-8ecb-065aa8f15c85",
+  "versionId": "680e77d7-d081-4761-a4fe-5ebf86b8cbfc",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "807ad13c3bf51efff215bd34f3810862e4db59d4fca1945f8ef8d51a11a4a8a8"

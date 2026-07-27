@@ -141,3 +141,7 @@ Esto permite evitar información hardcodeada y mantener la solución escalable.
 La solución desarrollada integra una base de datos dinámica, un motor de Inteligencia Artificial y un flujo de automatización completo utilizando n8n.
 
 El proyecto demuestra una arquitectura escalable preparada para incorporar nuevos canales de comunicación y nuevas automatizaciones comerciales.
+## Base de datos Airtable
+
+Enlace (modo lectura):
+https://https://airtable.com/invite/l?inviteId=invJTuJwTEZT66DsC&inviteToken=393b2f64f42023c964c86f619849015b58a4db24bd5dcd0de8baf1537e041c3c&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts
